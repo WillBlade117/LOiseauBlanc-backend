@@ -21,4 +21,10 @@ router.post('/', (req, res) => {
         });
 });
 
+router.get("/", (req, res) => {
+    Tweet.find().then((data) => {
+      res.json({ result: true, content: data });
+    });
+  });
+
 module.exports = router;
