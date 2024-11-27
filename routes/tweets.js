@@ -24,7 +24,7 @@ router.post('/', (req, res) => {
 });
 
 router.get("/", (req, res) => {
-    Tweet.find().then((data) => {
+    Tweet.find().sort({date: -1}).then((data) => {
       res.json({ result: true, content: data });
     });
   });
