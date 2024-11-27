@@ -19,7 +19,6 @@ router.post("/signup", (req, res) => {
         username: req.body.username,
         password: hash,
         token: uid2(32),
-        tweets: [],
       });
       newUser.save().then((user) => {
         res.json({ result: true, user: { firstname: user.firstname, username: user.username, token: user.token }});
