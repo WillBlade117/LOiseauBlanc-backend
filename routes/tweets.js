@@ -29,4 +29,14 @@ router.get("/", (req, res) => {
     });
   });
 
+router.delete("/:date", (req, res) => {
+    Tweet.deleteOne({date: req.params.date})
+    .then(result => {
+        if (result.deletedCount === 1){
+           return res.json({ result: true, message: 'document deleted !' })
+        }
+        res.json({ result: false })
+    })
+});
+
 module.exports = router;
