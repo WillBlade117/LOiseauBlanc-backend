@@ -3,6 +3,7 @@ var router = express.Router();
 const User = require("../models/user");
 const Tweet = require('../models/tweet');
 
+//Poster un tweet :
 router.post('/', (req, res) => {
     User.findOne({ token: req.body.token })
         .then(data => {
@@ -23,12 +24,20 @@ router.post('/', (req, res) => {
         });
 });
 
+//Récupérer les tweets :
 router.get("/", (req, res) => {
-    Tweet.find().sort({date: -1}).then((data) => {
+    const page = parseInt(req.query.page) || 1;
+    const limit = 15;
+    const skip = (page - 1) * limit;
+  
+    Tweet.find().sort({ date: -1 }).skip(skip).limit(limit).then((data) => {
       res.json({ result: true, content: data });
+    }).catch(error => {
+      res.json({ result: false, message: error.message });
     });
   });
-
+  
+//Supprimer un tweet :
 router.delete("/:date", (req, res) => {
     Tweet.deleteOne({date: req.params.date})
     .then(result => {
