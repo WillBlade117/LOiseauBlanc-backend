@@ -27,7 +27,7 @@ router.post('/', (req, res) => {
 //Récupérer les tweets :
 router.get("/", (req, res) => {
     const page = parseInt(req.query.page) || 1;
-    const limit = 15;
+    const limit = 10;
     const skip = (page - 1) * limit;
 
     Tweet.find().sort({ date: -1 }).skip(skip).limit(limit).then((data) => {
@@ -93,5 +93,25 @@ router.put('/unlike/:date', (req, res) => {
                 })
         })
 });
+
+//Vérifie si un tweet est liké par l'utilisateur :
+router.post('/hasLike/:date', (req, res) => {
+    User.findOne({ token: req.body.token })
+        .then(user => {
+            if (!user) {
+                return res.json({ result: false, message: 'User not found' });
+            }
+            Tweet.findOne({ date: req.params.date })
+                .then(tweet => {
+                    if (!tweet) {
+                        return res.json({ result: false, message: 'Tweet not found' });
+                    }
+                    const liked = tweet.hasLiked.includes(user._id);
+                    return res.json({ result: true, liked });
+                })
+        })
+});
+
+
 
 module.exports = router;
